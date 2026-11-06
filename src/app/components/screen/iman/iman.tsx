@@ -7,7 +7,11 @@ export default function ImanScreen() {
   return (
     <SafeAreaView>
       <AppBar title={imanData.data.title_english} />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
         <Text style={styles.headerArabic}>{imanData.data.title}</Text>
 
         <Text style={styles.headerMalayalam}>

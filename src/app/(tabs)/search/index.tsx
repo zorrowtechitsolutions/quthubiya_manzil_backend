@@ -16,14 +16,13 @@ import AppBar from "../../components/common/AppBar";
 import MenuButton from "../../components/common/menuButton";
 
 export default function SearchIndex() {
-  const router = useRouter();
   const [search, setSearch] = useState("");
 
   const filteredMenu = menu.filter((item) =>
     item.label.toLowerCase().includes(search.toLowerCase().trim()),
   );
 
-  const handleSearchChange = useCallback((text: any) => {
+  const handleSearchChange = useCallback((text: string) => {
     setSearch(text);
   }, []);
 
@@ -32,20 +31,16 @@ export default function SearchIndex() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
       <Stack.Screen
         options={{
-          // iOS: show native header so Stack.SearchBar works like before
-          // Android: hide native header, we render our own top bar + search
           headerShown: Platform.OS === "ios",
           title: "Categories",
         }}
       />
 
-      {/* Custom AppBar on Android only (iOS uses native header) */}
       {Platform.OS !== "ios" && <AppBar title="Categories" />}
 
-      {/* Custom search bar on Android only */}
       {Platform.OS === "android" && (
         <View style={styles.searchContainer}>
           <Ionicons
@@ -54,6 +49,7 @@ export default function SearchIndex() {
             color="#737373"
             style={styles.searchIcon}
           />
+
           <TextInput
             style={styles.searchInput}
             placeholder="Search categories"
@@ -62,6 +58,7 @@ export default function SearchIndex() {
             onChangeText={handleSearchChange}
             returnKeyType="search"
           />
+
           {search.length > 0 && (
             <Ionicons
               name="close-circle"
@@ -74,12 +71,8 @@ export default function SearchIndex() {
         </View>
       )}
 
-      {/* Category grid */}
       <ScrollView
-        style={{
-          flex: 1,
-          ...(Platform.OS === "ios" && { marginTop: 80 }),
-        }}
+        style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
@@ -99,7 +92,6 @@ export default function SearchIndex() {
         )}
       </ScrollView>
 
-      {/* Native search bar on iOS only (keeps the original iOS look) */}
       {Platform.OS === "ios" && (
         <Stack.SearchBar
           placement="automatic"
@@ -107,6 +99,8 @@ export default function SearchIndex() {
           onChangeText={handleNativeSearchChange}
         />
       )}
+
+    
     </SafeAreaView>
   );
 }
@@ -114,10 +108,10 @@ export default function SearchIndex() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    minHeight: 0,
     backgroundColor: "#FAFAFA",
   },
 
-  /* Android custom search bar */
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -131,17 +125,25 @@ const styles = StyleSheet.create({
     borderColor: "#E5E5E5",
     height: 44,
   },
+
   searchIcon: {
     marginRight: 8,
   },
+
   searchInput: {
     flex: 1,
     fontSize: 16,
     color: "#171717",
     paddingVertical: 0,
   },
+
   clearIcon: {
     marginLeft: 8,
+  },
+
+  scrollView: {
+    flex: 1,
+    minHeight: 0,
   },
 
   scrollContent: {
@@ -150,6 +152,7 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
     flexGrow: 1,
   },
+
   gridContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -157,10 +160,13 @@ const styles = StyleSheet.create({
     columnGap: 12,
     rowGap: 18,
   },
+
   emptyText: {
     textAlign: "center",
     marginTop: 40,
     fontSize: 15,
     color: "#737373",
   },
+
+
 });

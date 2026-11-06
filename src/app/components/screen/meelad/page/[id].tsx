@@ -250,7 +250,11 @@ const MeeladDetails = () => {
         </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+      >
         {meelad.subtext && (
           <Text style={styles.subtext}>{meelad?.subtext}</Text>
         )}

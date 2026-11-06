@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { preloadInterstitial, showInterstitial } from "../../ads/InterstitialAdManager";
 
 type AsmaulHusna = {
   id: number;
@@ -21,6 +22,25 @@ type AsmaulHusna = {
 
 export default function Asmaulhusna({ title, data, subtitle, name }: { title: string; data: AsmaulHusna[]; subtitle: string; name: string }) {
   const [viewMode, setViewMode] = useState<"list" | "card">("list");
+
+  /// ads
+  
+    const hasShownAd = useRef(false);
+  
+    useEffect(() => {
+      // Preload the next interstitial ad.
+      preloadInterstitial();
+  
+      // Show the ad once when this screen opens, if it's ready.
+      if (!hasShownAd.current) {
+        hasShownAd.current = true;
+        showInterstitial();
+      }
+  
+      return () => {
+        hasShownAd.current = false;
+      };
+    }, []);
 
   const renderListItem = ({ item }: { item: AsmaulHusna }) => {
     return (
@@ -160,6 +180,7 @@ export default function Asmaulhusna({ title, data, subtitle, name }: { title: st
           columnWrapperStyle={styles.cardRow}
         />
       )}
+  
     </>
   );
 }
@@ -435,5 +456,6 @@ const styles = StyleSheet.create({
     color: "#222222",
     textAlign: "center",
   },
+   
 });
 

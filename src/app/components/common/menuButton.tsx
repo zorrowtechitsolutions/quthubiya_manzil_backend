@@ -55,6 +55,12 @@ export default function MenuButton({ icon, label }: MenuButtonProps) {
       router.push("../components/screen/calendar/calendar");
     } else if (label === "Nombu") {
       router.push("../components/screen/nombu/nombu");
+    } else if (label === "Swalath") {
+      router.push("../components/screen/swalath/swalath");
+    } else if (label === "Hajju & Umra") {
+      router.push("../components/screen/umra");
+    } else if (label === "Asmaul Badru") {
+      router.push("../components/screen/asmaulhusna/asmaulbadru");
     }
   };
 
@@ -106,7 +112,7 @@ const styles = StyleSheet.create({
 
   menuLabel: {
     color: "#111827",
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: "500",
     textAlign: "center",
   },

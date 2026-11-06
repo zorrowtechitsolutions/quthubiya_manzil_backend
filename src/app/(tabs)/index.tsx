@@ -15,6 +15,8 @@ import { menu, menuIcons } from "../../constants/menu";
 import quran from "../../constants/quran.json";
 import MenuButton from "../components/common/menuButton";
 import ReminderCard from "../components/common/remainderCard";
+import { useEffect, useRef } from "react";
+import { preloadInterstitial, showInterstitial } from "../components/ads/InterstitialAdManager";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const CARD_WIDTH = (SCREEN_WIDTH - 32 - 12) / 2;
@@ -80,81 +82,109 @@ export default function Index() {
 
   const todaySurahs = getDaySurahs(todayData?.surah ?? []);
 
+
+    /// ads
+    
+      const hasShownAd = useRef(false);
+    
+      useEffect(() => {
+        // Preload the next interstitial ad.
+        preloadInterstitial();
+    
+        // Show the ad once when this screen opens, if it's ready.
+        if (!hasShownAd.current) {
+          hasShownAd.current = true;
+          showInterstitial();
+        }
+    
+        return () => {
+          hasShownAd.current = false;
+        };
+      }, []);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+  <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
+    <StatusBar barStyle="dark-content" />
+
+    {/* Main Scrollable Content */}
+    <ScrollView
+      style={styles.scrollView}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.scrollContent}
+    >
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.greeting}>Assalamu Alaikum</Text>
+        <Text style={styles.appTitle}>Quthubiya Manzil</Text>
+      </View>
+
+      {/* Daily Reminder */}
+      <Text style={styles.sectionTitle}>
+        {today.charAt(0).toUpperCase() + today.slice(1)} Reminder
+      </Text>
 
       <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.remindersRow}
+        snapToInterval={CARD_WIDTH + 12}
+        decelerationRate="fast"
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.greeting}>Assalamu Alaikum</Text>
-          <Text style={styles.appTitle}>Quthubiya Manzil</Text>
-        </View>
-
-        {/* Friday Reminder */}
-        <Text style={styles.sectionTitle}>
-          {today.charAt(0).toUpperCase() + today.slice(1)} Reminder
-        </Text>
-
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.remindersRow}
-          snapToInterval={CARD_WIDTH + 12}
-          decelerationRate="fast"
-        >
-          {todaySurahs.map((surah: any) => (
-            <ReminderCard
-              key={surah.number}
-              id={surah.number}
-              width={CARD_WIDTH}
-              title={`Surah ${surah.englishName}`}
-              surahNum={String(surah.number)}
-              arabicText={surah.name}
-              reciter={surah.revelationType}
-              colors={
-                surahColors[String(surah.number)] ?? ["#374151", "#111827"]
-              }
-            />
-          ))}
-        </ScrollView>
-
-        {/* Categories Header */}
-        <View style={styles.categoriesHeader}>
-          <Text style={styles.categoriesTitle}>Categories</Text>
-
-          <Pressable
-            style={styles.seeMore}
-            onPress={() => router.push("/(tabs)/search")}
-          >
-            <Text>See More</Text>
-            <ChevronRight width={20} />
-          </Pressable>
-        </View>
-
-        {/* Grid Menu */}
-        <View style={styles.gridContainer}>
-          {menu.slice(0, 8).map((v) => (
-            <MenuButton key={v.id} icon={menuIcons[v.icon]} label={v.label} />
-          ))}
-        </View>
+        {todaySurahs.map((surah: any) => (
+          <ReminderCard
+            key={surah.number}
+            id={surah.number}
+            width={CARD_WIDTH}
+            title={`Surah ${surah.englishName}`}
+            surahNum={String(surah.number)}
+            arabicText={surah.name}
+            reciter={surah.revelationType}
+            colors={
+              surahColors[String(surah.number)] ?? ["#374151", "#111827"]
+            }
+          />
+        ))}
       </ScrollView>
-    </SafeAreaView>
-  );
-}
 
+      {/* Categories Header */}
+      <View style={styles.categoriesHeader}>
+        <Text style={styles.categoriesTitle}>Categories</Text>
+
+        <Pressable
+          style={styles.seeMore}
+          onPress={() => router.push("/(tabs)/search")}
+        >
+          <Text>See More</Text>
+          <ChevronRight width={20} />
+        </Pressable>
+      </View>
+
+      {/* Grid Menu */}
+      <View style={styles.gridContainer}>
+        {menu.slice(0, 8).map((v) => (
+          <MenuButton key={v.id} icon={menuIcons[v.icon]} label={v.label} />
+        ))}
+      </View>
+    </ScrollView>
+
+  </SafeAreaView>
+);
+
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#FFFFFF",
+  },
+
+  scrollView: {
+    flex: 1,
   },
 
   scrollContent: {
     padding: 20,
-    marginTop: 20,
+    paddingTop: 20,
+    paddingBottom: 20,
   },
 
   header: {
@@ -209,4 +239,6 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
   },
+
+
 });

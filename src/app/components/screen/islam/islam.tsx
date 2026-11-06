@@ -7,7 +7,11 @@ export default function IslamScreen() {
   return (
     <SafeAreaView>
       <AppBar title={islamData.data.title_english} />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+      >
         <Text style={styles.headerArabic}>{islamData.data.title}</Text>
 
         <Text style={styles.headerMalayalam}>

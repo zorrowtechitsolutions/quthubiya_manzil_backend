@@ -7,7 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppBar from "../../common/AppBar";
@@ -57,23 +57,17 @@ export default function CounterScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <AppBar title="Zikr Counter" />
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <AppBar title="Zikr Counter" showSettingsIcon={true} />
+      <StatusBar barStyle="dark-content" />
 
+      {/* <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        bounces={true}
+      > */}
       <View style={styles.container}>
         {/* Header */}
-        <View style={styles.header}>
-          <View></View>
-
-          <Pressable
-            style={styles.headerIcon}
-            onPress={() => openSheet()}
-            accessibilityRole="button"
-            accessibilityLabel="Change target"
-          >
-            <Ionicons name="settings-outline" size={23} color="#111111" />
-          </Pressable>
-        </View>
 
         {/* Main Counter Card */}
         <View style={styles.counterCard}>
@@ -193,9 +187,7 @@ export default function CounterScreen() {
               style={styles.editButton}
               accessibilityRole="button"
               accessibilityLabel="Edit target"
-            >
-              <Ionicons name="pencil-outline" size={17} color="#111111" />
-            </Pressable>
+            ></Pressable>
           </View>
 
           <View style={styles.infoCard}>
@@ -223,73 +215,7 @@ export default function CounterScreen() {
           <View style={styles.footerLine} />
         </View>
       </View>
-
-      {/* Target Selection Modal */}
-      {/* <Modal
-        visible={targetModalVisible}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setTargetModalVisible(false)}
-      >
-        <Pressable
-          style={styles.modalBackdrop}
-          onPress={() => setTargetModalVisible(false)}
-        >
-          <Pressable style={styles.modalSheet} onPress={() => {}}>
-            <View style={styles.modalHandle} />
-
-            <Text style={styles.modalTitle}>Choose Target</Text>
-            <Text style={styles.modalSubtitle}>Select your zikr target.</Text>
-
-            <ScrollView
-              style={styles.modalList}
-              showsVerticalScrollIndicator={false}
-            >
-              {TARGET_OPTIONS.map((value) => {
-                const selected = value === target;
-                return (
-                  <Pressable
-                    key={value}
-                    onPress={() => selectTarget(value)}
-                    style={({ pressed }) => [
-                      styles.targetOption,
-                      selected && styles.targetOptionSelected,
-                      pressed && styles.pressed,
-                    ]}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected }}
-                  >
-                    <Text
-                      style={[
-                        styles.targetOptionText,
-                        selected && styles.targetOptionTextSelected,
-                      ]}
-                    >
-                      {value}
-                    </Text>
-
-                    {selected && (
-                      <Ionicons name="checkmark" size={20} color="#FFFFFF" />
-                    )}
-                  </Pressable>
-                );
-              })}
-            </ScrollView>
-
-            <Pressable
-              onPress={() => setTargetModalVisible(false)}
-              style={({ pressed }) => [
-                styles.modalCancel,
-                pressed && styles.pressed,
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel="Cancel target selection"
-            >
-              <Text style={styles.modalCancelText}>CANCEL</Text>
-            </Pressable>
-          </Pressable>
-        </Pressable>
-      </Modal> */}
+      {/* </ScrollView> */}
 
       <BottomSheetComponent
         headingText={"Choose Target"}
@@ -307,6 +233,16 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+  },
+
+  scrollView: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+  },
+
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 20,
   },
 
   container: {
